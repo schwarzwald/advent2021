@@ -1,11 +1,9 @@
 module.exports = input => {
-  const countBits = arr => {
-    let result = [];
+  const countBits = (arr, i) => {
+    let result = 0;
 
     for (let code of arr) {
-      for (let i = 0; i < code.length; i++) {
-        result[i] = (result[i] || 0) + +code.charAt(i);
-      }
+      result += +code[i];
     }
 
     return result;
@@ -14,8 +12,8 @@ module.exports = input => {
 
   let oxygenCodes = codes.slice();
   for (let i = 0; i < codes[0].length; i++) {
-    let counts = countBits(oxygenCodes);
-    let x = counts[i] * 2 >= oxygenCodes.length ? '1' : '0';
+    let count = countBits(oxygenCodes, i);
+    let x = count * 2 >= oxygenCodes.length ? '1' : '0';
 
     oxygenCodes = oxygenCodes.filter(c => c[i] == x);
     if (oxygenCodes.length == 1) {
@@ -25,8 +23,8 @@ module.exports = input => {
 
   let co2Codes = codes.slice();
   for (let i = 0; i < codes[0].length; i++) {
-    let counts = countBits(co2Codes);
-    let x = counts[i] * 2 >= co2Codes.length ? '0' : '1';
+    let count = countBits(co2Codes, i);
+    let x = count * 2 >= co2Codes.length ? '0' : '1';
 
     co2Codes = co2Codes.filter(c => c[i] == x);
     if (co2Codes.length == 1) {
