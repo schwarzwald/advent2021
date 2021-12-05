@@ -25,10 +25,8 @@ module.exports = input => {
 
     if (boards.length > 1) {
       boards = boards.filter(b => !hasBingo(b, sublist));
-    } else {
-      if (hasBingo(boards[0], sublist)) {
-        return numbers[i - 1] * boards[0].reduce((s, row) => (s + row.filter(r => !sublist.includes(r)).reduce((sum, a) => sum + a, 0)), 0);
-      }
+    } else if (hasBingo(boards[0], sublist)) {
+      return numbers[i - 1] * boards[0].reduce((s, row) => (s + row.filter(r => !sublist.includes(r)).reduce((sum, a) => sum + a, 0)), 0);
     }
   }
 }
