@@ -16,11 +16,7 @@ const decode = (numbers, code) => {
   for (let number of numbers.filter(c => c.length == 6)) {
     if ([...digits[1]].some(c => !number.includes(c))) {
       digits[6] = number;
-    }
-  }
-
-  for (let number of numbers.filter(c => c.length == 6 && c != digits[6])) {
-    if ([...digits[4]].every(c => number.includes(c))) {
+    } else if ([...digits[4]].every(c => number.includes(c))) {
       digits[9] = number;
     } else {
       digits[0] = number;
