@@ -5,17 +5,43 @@ const calcRisk = (x, y, grid) => {
   return r > 9 ? r % 9 : r;
 }
 
-const push = (val, queue, risks) => {
+const find = (val, queue, risks) => {
   let d = risks.get(val);
+  let min = 0;
+  let max = queue.length ? queue.length - 1 : 0;
 
-  for (let i = 0; i < queue.length; i++) {
-    if (d <= risks.get(queue[i])) {
-      queue.splice(i, 0, val);
-      return;
+  while (true) {
+    let x = Math.floor((min + max) / 2)
+    let riskX = risks.get(queue[x]);
+
+    if (d == riskX) {
+      return x;
+    }
+
+    if (d <= riskX) {
+      max = x;
+    } else {
+      min = x;
+    }
+
+    if (max - min <= 1) {
+      if (d >= risks.get(queue[min]) && d <= risks.get(queue[max])) {
+        return min;
+      } else {
+        return -1;
+      }
     }
   }
+}
 
-  queue.push(val);
+const push = (val, queue, risks) => {
+  let x = find(val, queue, risks);
+
+  if (x != -1) {
+    queue.splice(x, 0, val);
+  } else {
+    queue.push(val);
+  }
 }
 
 module.exports = input => {
@@ -51,6 +77,4 @@ module.exports = input => {
       }
     }
   }
-
-  return risks.get(end);
 }

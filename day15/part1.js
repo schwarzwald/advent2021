@@ -33,6 +33,4 @@ module.exports = input => {
       }
     }
   }
-
-  return risks[end];
 }
