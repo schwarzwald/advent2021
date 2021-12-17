@@ -1,5 +1,4 @@
 const sum = (start, size) => start * size + (size - size * size) / 2;
-
 const factorize = (number) => {
   let start = Math.ceil(number / 2);
   let factors = [[number, 1]];
@@ -26,18 +25,23 @@ const factorize = (number) => {
   }
 }
 
-const id = (x, y) => `${x},${y}`;
+const id = (x, y) => 1000 * y + x;
 
 module.exports = input => {
   let [xmin, xmax, ymin, ymax] = input.match(/target area: x=(-?\d+)\.\.(-?\d+), y=(-?\d+)..(-?\d+)/).slice(1).map(Number);
 
   let result = new Set();
+  let factors = [];
+
+  for (let x = xmin; x <= xmax; x++) {
+    factors.push(factorize(x));
+  }
 
   for (let y = ymin; y <= ymax; y++) {
     let yfactors = factorize(-y).map(([start, size]) => [start - size + 1, size]);
 
-    for (let x = xmin; x <= xmax; x++) {
-      for (let [vx, tx] of factorize(x)) {
+    for (let xfactors of factors) {
+      for (let [vx, tx] of xfactors) {
         for (let [vy, ty] of yfactors) {
           let tdual = ty + vy * 2 - 1;
 
