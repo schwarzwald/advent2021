@@ -4,10 +4,47 @@ const rotz = [[0, 1, 0], [-1, 0, 0], [0, 0, 1]];
 
 class Cluster {
 
-  constructor(id, points, origin = [0, 0, 0]) {
+  constructor(id, points) {
     this.id = id;
     this.points = points;
-    this.origin = origin;
+    this.origin = [0, 0, 0];
+    this.relative = [];
+
+    for (let i = 0; i < this.points.length; i++) {
+      let distances = new Set();
+      this.relative.push(distances);
+
+      for (let j = 0; j < this.points.length; j++) {
+        if (i != j) {
+          distances.add(this._manhattan(this.points[i], this.points[j]));
+        }
+      }
+    }
+  }
+
+  compareRelativeDistance(c2) {
+    let d1 = this.relative;
+    let d2 = c2.relative;
+
+    for (let p of d1) {
+      for (let q of d2) {
+        let count = 0;
+        for (let distance of p) {
+          if (q.has(distance)) {
+            count++;
+          }
+          if (count >= 11) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  _manhattan(p, q) {
+    return Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) + Math.abs(p[2] - q[2]);
   }
 
   multiply(matrix) {
@@ -68,6 +105,10 @@ class Cluster {
 }
 
 const fit = (c1, c2) => {
+  if (!c1.compareRelativeDistance(c2)) {
+    return null;
+  }
+
   let fitted = fitAlongX(c1, c2);
   if (fitted) {
     return fitted;
