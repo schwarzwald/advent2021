@@ -97,7 +97,7 @@ const reduce = number => {
 const add = (n1, n2) => reduce('[' + n1 + ',' + n2 + ']');
 const magnitude = number => isNaN(number) ? 3 * magnitude(number[0]) + 2 * magnitude(number[1]) : number;
 
-module.exports = input => magnitude(eval(
+module.exports = input => magnitude(JSON.parse(
   input.split(/\r?\n/)
     .map(t => t.trim())
     .reduce((res, curr) => add(res, curr))));

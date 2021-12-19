@@ -108,7 +108,7 @@ module.exports = input => {
         continue;
       }
 
-      max = Math.max(max, magnitude(eval(add(numbers[i], (numbers[j])))));
+      max = Math.max(max, magnitude(JSON.parse(add(numbers[i], (numbers[j])))));
     }
   }
 
