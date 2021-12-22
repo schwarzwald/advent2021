@@ -9,7 +9,7 @@ describe('Day 21: Part 1', () => {
   });
 });
 describe('Day 21: Part 2', () => {
-  it('Should calculate score of the losing player with the number of total dice rolls', () => {
+  it('Should calculate number of universes in which the winning player wins using dirac dice', () => {
     expect(part2(`Player 1 starting position: 4
     Player 2 starting position: 8`)).to.equal(444356092776315);
   });
