@@ -1,6 +1,7 @@
 const house = new Map().set('A', 0).set('B', 1).set('C', 2).set('D', 3);
 const price = new Map().set('A', 1).set('B', 10).set('C', 100).set('D', 1000);
 const types = ['A', 'B', 'C', 'D'];
+const roomSize = 2;
 
 const canGoHome = (hw, from, to) => {
   to = 2 + 2 * to;
@@ -40,9 +41,7 @@ const canGoToHallway = (hw, from, to) => {
   }
 }
 
-const isRoomFinished = (rm, i) => {
-  return rm[0] == types[i] && rm[1] == types[i];
-}
+const isRoomFinished = (rm, i) => rm.every(r => r == types[i]);
 
 const isFinished = rooms => {
   for (let i = 0; i < 4; i++) {
@@ -59,7 +58,7 @@ const id = (hw, rm, score) => {
     r += hw[i] ? hw[i] : '.';
   }
   for (let i = 0; i < 4; i++) {
-    r += rm[i][0] + '#' + rm[i][1];
+    r += rm[i].join('#');
   }
   return r;
 }
@@ -102,23 +101,18 @@ module.exports = input => {
       let type = hw[i];
       if (type) {
         if (canGoHome(hw, i, house.get(type))) {
-          if (!rm[house.get(type)][0]) {
-            if (rm[house.get(type)][1] == type) {
-              let dist = Math.abs(2 + 2 * house.get(type) - i) + 1;
+          for (let bottom = roomSize - 1; bottom >= 0; bottom--) {
+            if (!rm[house.get(type)][bottom]) {
+              let dist = Math.abs(2 + 2 * house.get(type) - i) + bottom + 1;
 
               let newHw = hw.slice();
               newHw[i] = null;
               let newRooms = rm.map(c => c.slice());
-              newRooms[house.get(type)][0] = type;
+              newRooms[house.get(type)][bottom] = type;
               queue.push([newHw, newRooms, score + price.get(type) * dist]);
-            } else if (!rm[house.get(type)][1]) {
-              let dist = Math.abs(2 + 2 * house.get(type) - i) + 2;
-
-              let newHw = hw.slice();
-              newHw[i] = null;
-              let newRooms = rm.map(c => c.slice());
-              newRooms[house.get(type)][1] = type;
-              queue.push([newHw, newRooms, score + price.get(type) * dist]);
+              break;
+            } else if (rm[house.get(type)][bottom] != type) {
+              break;
             }
           }
         }
@@ -132,31 +126,32 @@ module.exports = input => {
             continue;
           }
 
-          if (rm[i][0]) {
-            if (canGoToHallway(hw, i, j)) {
-              let dist = Math.abs(2 + 2 * i - j) + 1;
+          for (let top = 0; top < roomSize; top++) {
+            if (rm[i][top]) {
+              let isMovable = false;
+              for (let k = top; k < roomSize; k++) {
+                if (rm[i][k] != types[i]) {
+                  isMovable = true;
+                  break;
+                }
+              }
 
-              let newHw = hw.slice();
-              newHw[j] = rm[i][0];
+              if (isMovable) {
+                if (canGoToHallway(hw, i, j)) {
+                  let dist = Math.abs(2 + 2 * i - j) + top + 1;
 
-              let newRooms = rm.map(c => c.slice());
-              newRooms[i][0] = null;
-              queue.push([newHw, newRooms, score + price.get(rm[i][0]) * dist]);
-            }
-          } else if (rm[i][1] && rm[i][1] != types[i]) {
-            if (canGoToHallway(hw, i, j)) {
-              let dist = Math.abs(2 + 2 * i - j) + 2
+                  let newHw = hw.slice();
+                  newHw[j] = rm[i][top];
 
-              let newHw = hw.slice();
-              newHw[j] = rm[i][1];
-
-              let newRooms = rm.map(c => c.slice());
-              newRooms[i][1] = null;
-              queue.push([newHw, newRooms, score + price.get(rm[i][1]) * dist]);
+                  let newRooms = rm.map(c => c.slice());
+                  newRooms[i][top] = null;
+                  queue.push([newHw, newRooms, score + price.get(rm[i][top]) * dist]);
+                  break;
+                }
+              }
             }
           }
         }
-
       }
     }
   }
