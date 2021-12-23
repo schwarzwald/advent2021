@@ -100,40 +100,20 @@ const disect3d = ([ax1, ax2, ay1, ay2, az1, az2], [bx1, bx2, by1, by2, bz1, bz2]
   return sections3d;
 }
 
-module.exports = input => {
-  let regions = input.split(/\r?\n/)
+module.exports = input =>
+  input.split(/\r?\n/)
     .map(t => t.trim().match(/(\w+) x=(-?\d+)\.\.(-?\d+),y=(-?\d+)\.\.(-?\d+),z=(-?\d+)\.\.(-?\d+)/))
-    .map(([_, state, x1, x2, y1, y2, z1, z2]) => [state, +x1, +x2, +y1, +y2, +z1, +z2]);
-
-
-  let sections = [];
-  for (let [state, x1, x2, y1, y2, z1, z2] of regions) {
-    if (state == 'off') {
+    .map(([_, state, x1, x2, y1, y2, z1, z2]) => [state, +x1, +x2, +y1, +y2, +z1, +z2])
+    .reduce((sections, [state, x1, x2, y1, y2, z1, z2]) => {
       let newSections = [];
-      let turnOff = [x1, x2, y1, y2, z1, z2];
+      let region = [x1, x2, y1, y2, z1, z2];
 
       for (let section of sections) {
-        newSections.push(...disect3d(section, turnOff));
+        newSections.push(...disect3d(section, region));
       }
-      sections = newSections;
-    } else {
-      let turnOn = [[x1, x2, y1, y2, z1, z2]];
-
-      for (let section of sections) {
-        let newQueue = [];
-        for (let newSection of turnOn) {
-          newQueue.push(...disect3d(newSection, section));
-        }
-        turnOn = newQueue;
+      if (state == 'on') {
+        newSections.push(region);
       }
-
-      sections.push(...turnOn);
-    }
-  }
-
-  let sum = 0;
-  for (let [x1, x2, y1, y2, z1, z2] of sections) {
-    sum += (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1);
-  }
-  return sum;
-}
+      return newSections;
+    }, [])
+    .reduce((sum, [x1, x2, y1, y2, z1, z2]) => sum + (x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1), 0);
