@@ -12,4 +12,14 @@ describe('Day 23: Part 1', () => {
   #########`)).to.equal(12521);
   });
 });
-describe('Day 23: Part 2', () => { });
+describe('Day 23: Part 2', function () {
+  this.timeout(10000);
+  it('Should calculate the minimal energy required to sort the amphipods with additional lines', () => {
+    expect(part2(
+      `#############
+#...........#
+###B#C#B#D###
+  #A#D#C#A#
+  #########`)).to.equal(44169);
+  });
+});
