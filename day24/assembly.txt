@@ -1,0 +1,39 @@
+input11 == input12 - 5
+input7  == input8 + 3
+input5  == input6 - 1
+input4  == input9 - 8
+input3  == input10 + 7
+input2  == input13 - 3
+input1  == input14 + 8
+
+if (input5 + 1 != input6) {
+
+} else {
+  if (input7 - 3 != input8) {
+	z = ((((input1 + 5) * 26 + input2 + 5) * 26 + input3 + 1) * 26 + input4 + 15) * 26 + input8 + 8
+  } else {
+	if (input4 + 8 != input9) {
+	  z = (((input1 + 5) * 26 + input2 + 5) * 26 + input3 + 1) * 26 + input8 + 14
+	} else {
+	  if (input3 - 7 != input10) {
+		z = ((input1 + 5) * 26 + input2 + 5) * 26 + input10 + 12
+	  } else {
+		if (input11 + 5 != input12) {
+		  z = ((input1 + 5) * 26 + input2 + 5) * 26 + input12 + 14
+		} else {
+		  if (input2 + 3 != input13) {
+			z = (input1 + 5) * 26 + input13 + 13
+		  } else {
+			if (input1 - 8 != input14) {
+			  z = input14 + 6
+			} else {
+			  z = 0
+			}
+		  }
+		}
+	  }	  
+	}
+  }
+}
+96918996924991
+91811241911641
